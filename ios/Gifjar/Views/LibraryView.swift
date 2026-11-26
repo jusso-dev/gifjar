@@ -19,17 +19,23 @@ struct LibraryView: View {
         @Bindable var model = model
         let results = filteredItems
 
-        ScrollView {
-            if !results.isEmpty {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: isEmbeddedBrowser ? 96 : 110), spacing: 2)], spacing: 2) {
-                    ForEach(results) { item in
-                        cell(for: item)
+        Group {
+            if results.isEmpty {
+                // Replaces the grid rather than overlaying an empty ScrollView, so the
+                // message gets the full width on every display (incl. the Duo cover screen).
+                emptyState
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: isEmbeddedBrowser ? 96 : 110), spacing: 2)], spacing: 2) {
+                        ForEach(results) { item in
+                            cell(for: item)
+                        }
                     }
+                    .padding(.bottom, 80)
                 }
-                .padding(.bottom, 80)
             }
         }
-        .overlay { emptyState(resultsEmpty: results.isEmpty) }
         .navigationTitle(model.filter == .all ? String(localized: "Gifjar") : model.filter.title)
         .toolbarTitleDisplayMode(isEmbeddedBrowser ? .inline : .large)
         .searchable(text: $model.searchText, prompt: "Phrases, notes, objects, text")
@@ -161,7 +167,7 @@ struct LibraryView: View {
 
     // MARK: Empty states
 
-    @ViewBuilder private func emptyState(resultsEmpty: Bool) -> some View {
+    @ViewBuilder private var emptyState: some View {
         if items.isEmpty {
             ContentUnavailableView {
                 Label("Gifjar Is Empty", systemImage: "square.and.arrow.down.on.square")
@@ -172,9 +178,9 @@ struct LibraryView: View {
                     .buttonBorderShape(.capsule)
                 Button("Add from Link") { model.showingAddLink = true }
             }
-        } else if resultsEmpty, !model.searchText.isEmpty {
+        } else if !model.searchText.isEmpty {
             ContentUnavailableView.search(text: model.searchText)
-        } else if resultsEmpty {
+        } else {
             ContentUnavailableView(
                 "No \(model.filter.title)",
                 systemImage: model.filter.systemImage,

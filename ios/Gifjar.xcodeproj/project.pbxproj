@@ -97,8 +97,8 @@
 		B209A2FE30F40419BE0C730D /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 		B659A416172D7DB8E0C75375 /* ShareInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInbox.swift; sourceTree = "<group>"; };
 		C4F4ABFB1651F8B66E526AC3 /* MediaResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaResolver.swift; sourceTree = "<group>"; };
-		CF3BFF6490013A040B7FC8C2 /* GifjarShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = GifjarShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		CF749D8E1A0997EADC434D07 /* Gifjar.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Gifjar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF3BFF6490013A040B7FC8C2 /* GifjarShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GifjarShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF749D8E1A0997EADC434D07 /* Gifjar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gifjar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D67D79471092E8C90E3233BB /* GifjarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifjarItem.swift; sourceTree = "<group>"; };
 		EE95EAA0AF71896BE8C67825 /* AddLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkView.swift; sourceTree = "<group>"; };
 		F14F29F073D00563FE3FE0BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -299,7 +299,6 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					3168FB159DF881461AAEF69E = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					322222795D485E7D519F0A87 = {
@@ -307,7 +306,6 @@
 						ProvisioningStyle = Automatic;
 					};
 					E60643DE92587DA1668F853E = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -418,6 +416,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Gifjar/Resources/Gifjar.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 83ZX28V765;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Gifjar/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -454,6 +453,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Gifjar/Resources/Gifjar.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 83ZX28V765;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Gifjar/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -604,6 +604,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				DEVELOPMENT_TEAM = 83ZX28V765;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -623,6 +624,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				DEVELOPMENT_TEAM = 83ZX28V765;
 				INFOPLIST_FILE = ShareExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
