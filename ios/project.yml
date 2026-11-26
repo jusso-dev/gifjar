@@ -1,0 +1,70 @@
+name: Stash
+options:
+  bundleIdPrefix: dev.jusso
+  deploymentTarget:
+    iOS: "27.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  Stash:
+    type: application
+    platform: iOS
+    sources:
+      - path: Stash
+      - path: Shared
+    dependencies:
+      - target: StashShare
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.jusso.stash
+        CODE_SIGN_ENTITLEMENTS: Stash/Resources/Stash.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_FILE: Stash/Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_PREVIEWS: YES
+  StashShare:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ShareExtension
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.jusso.stash.share
+        PRODUCT_MODULE_NAME: StashShare
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_FILE: ShareExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SKIP_INSTALL: YES
+  StashTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: StashTests
+    dependencies:
+      - target: Stash
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: dev.jusso.stash.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Stash.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Stash"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+schemes:
+  Stash:
+    build:
+      targets:
+        Stash: all
+    test:
+      targets:
+        - StashTests

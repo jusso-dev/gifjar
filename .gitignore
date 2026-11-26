@@ -1,0 +1,5 @@
+ios/Stash.xcodeproj/xcuserdata/
+ios/build/
+xcuserdata/
+*.xcuserstate
+.DS_Store

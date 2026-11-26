@@ -1,0 +1,118 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "display-p3:1.00000,0.54902,0.41176,1.00000",
+      "display-p3:0.90196,0.25490,0.29804,1.00000"
+    ],
+    "orientation": {
+      "start": {
+        "x": 0.2,
+        "y": 0
+      },
+      "stop": {
+        "x": 0.8,
+        "y": 1
+      }
+    }
+  },
+  "fill-specializations": [
+    {
+      "appearance": "dark",
+      "value": {
+        "linear-gradient": [
+          "display-p3:0.17647,0.13333,0.14118,1.00000",
+          "display-p3:0.07843,0.06275,0.06667,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "Sparkle",
+      "layers": [
+        {
+          "name": "sparkle",
+          "image-name": "sparkle.svg",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "display-p3:1.00000,0.62353,0.50196,1.00000"
+              }
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.4
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.2
+      }
+    },
+    {
+      "name": "Front",
+      "layers": [
+        {
+          "name": "front",
+          "image-name": "front.svg",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "display-p3:1.00000,0.54902,0.43137,1.00000"
+              }
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.15
+      }
+    },
+    {
+      "name": "Back",
+      "layers": [
+        {
+          "name": "back",
+          "image-name": "back.svg",
+          "glass": true,
+          "opacity": 0.55,
+          "fill-specializations": [
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "display-p3:0.70196,0.36471,0.32941,1.00000"
+              }
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.3
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.5
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": [
+      "iOS"
+    ]
+  }
+}
