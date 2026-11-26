@@ -16,10 +16,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9FAC94805FFDB4939741D3EE"
-               BuildableName = "Stash.app"
-               BlueprintName = "Stash"
-               ReferencedContainer = "container:Stash.xcodeproj">
+               BlueprintIdentifier = "E60643DE92587DA1668F853E"
+               BuildableName = "Gifjar.app"
+               BlueprintName = "Gifjar"
+               ReferencedContainer = "container:Gifjar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,10 +33,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9FAC94805FFDB4939741D3EE"
-            BuildableName = "Stash.app"
-            BlueprintName = "Stash"
-            ReferencedContainer = "container:Stash.xcodeproj">
+            BlueprintIdentifier = "E60643DE92587DA1668F853E"
+            BuildableName = "Gifjar.app"
+            BlueprintName = "Gifjar"
+            ReferencedContainer = "container:Gifjar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -45,10 +45,10 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6BD7EF5D7574098C82FF9A8D"
-               BuildableName = "StashTests.xctest"
-               BlueprintName = "StashTests"
-               ReferencedContainer = "container:Stash.xcodeproj">
+               BlueprintIdentifier = "322222795D485E7D519F0A87"
+               BuildableName = "GifjarTests.xctest"
+               BlueprintName = "GifjarTests"
+               ReferencedContainer = "container:Gifjar.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -69,10 +69,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9FAC94805FFDB4939741D3EE"
-            BuildableName = "Stash.app"
-            BlueprintName = "Stash"
-            ReferencedContainer = "container:Stash.xcodeproj">
+            BlueprintIdentifier = "E60643DE92587DA1668F853E"
+            BuildableName = "Gifjar.app"
+            BlueprintName = "Gifjar"
+            ReferencedContainer = "container:Gifjar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -86,10 +86,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9FAC94805FFDB4939741D3EE"
-            BuildableName = "Stash.app"
-            BlueprintName = "Stash"
-            ReferencedContainer = "container:Stash.xcodeproj">
+            BlueprintIdentifier = "E60643DE92587DA1668F853E"
+            BuildableName = "Gifjar.app"
+            BlueprintName = "Gifjar"
+            ReferencedContainer = "container:Gifjar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

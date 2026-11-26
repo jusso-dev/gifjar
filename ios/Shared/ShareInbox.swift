@@ -18,7 +18,7 @@ nonisolated struct ShareRequest: Codable, Sendable, Equatable {
 /// A folder in the App Group container that the share extension writes to and the app drains.
 /// Files, not a shared database, so the two processes never contend for the SwiftData store.
 nonisolated struct ShareInbox: Sendable {
-    static let appGroup = "group.dev.jusso.stash"
+    static let appGroup = "group.dev.jusso.gifjar"
     private static let manifest = "request.json"
 
     let directory: URL

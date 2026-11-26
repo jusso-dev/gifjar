@@ -119,8 +119,8 @@ private struct DualPaneLayout: View {
 
 private struct HalfOpenLayout: View {
     @Environment(AppModel.self) private var model
-    @Query(filter: #Predicate<StashItem> { !$0.pendingDeletion }, sort: \StashItem.createdAt, order: .reverse)
-    private var items: [StashItem]
+    @Query(filter: #Predicate<GifjarItem> { !$0.pendingDeletion }, sort: \GifjarItem.createdAt, order: .reverse)
+    private var items: [GifjarItem]
     let size: CGSize
 
     /// Clear space either side of the crease.
@@ -151,7 +151,7 @@ private struct HalfOpenLayout: View {
 /// The "screen" half of tabletop mode: the selected item, large and playing.
 private struct ViewerPane: View {
     @Environment(AppModel.self) private var model
-    let item: StashItem?
+    let item: GifjarItem?
 
     var body: some View {
         ZStack {
@@ -174,7 +174,7 @@ private struct ViewerPane: View {
                         .padding()
                     }
             } else {
-                ContentUnavailableView("Nothing Selected", systemImage: "photo.on.rectangle", description: Text("Choose something from your Stash to view it here."))
+                ContentUnavailableView("Nothing Selected", systemImage: "photo.on.rectangle", description: Text("Choose something from your Gifjar to view it here."))
                     .foregroundStyle(.white)
             }
         }

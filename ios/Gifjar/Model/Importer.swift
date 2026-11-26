@@ -7,8 +7,8 @@ import UniformTypeIdentifiers
 @Observable
 final class Importer {
     struct Outcome {
-        var added: [StashItem] = []
-        var duplicates: [StashItem] = []
+        var added: [GifjarItem] = []
+        var duplicates: [GifjarItem] = []
 
         mutating func merge(_ other: Outcome) {
             added += other.added
@@ -18,7 +18,7 @@ final class Importer {
 
     private let context: ModelContext
     private let session: URLSession
-    var onAdded: ((StashItem) -> Void)?
+    var onAdded: ((GifjarItem) -> Void)?
     private var activeImports = 0
     var isImporting: Bool { activeImports > 0 }
 
@@ -105,7 +105,7 @@ final class Importer {
     private func save(_ media: ResolvedMedia, title: String? = nil, phrase: String? = nil, note: String? = nil) throws -> Outcome {
         let phrase = phrase?.trimmed ?? ""
         let hash = MediaStore.hash(media.data)
-        var existing = FetchDescriptor<StashItem>(predicate: #Predicate { $0.contentHash == hash && !$0.pendingDeletion })
+        var existing = FetchDescriptor<GifjarItem>(predicate: #Predicate { $0.contentHash == hash && !$0.pendingDeletion })
         existing.fetchLimit = 1
         if let duplicate = try context.fetch(existing).first {
             // Sharing something you already have can still add a phrase to it.
@@ -118,7 +118,7 @@ final class Importer {
             return Outcome(duplicates: [duplicate])
         }
 
-        let item = StashItem(contentType: media.type, info: media.info, byteCount: media.data.count,
+        let item = GifjarItem(contentType: media.type, info: media.info, byteCount: media.data.count,
                              contentHash: hash, sourceURL: media.sourceURL)
         let typedTitle = title?.trimmed ?? ""
         item.title = typedTitle.isEmpty ? (media.suggestedTitle ?? "") : typedTitle

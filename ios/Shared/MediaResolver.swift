@@ -13,7 +13,7 @@ nonisolated enum ImportError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .nothingToImport: String(localized: "There’s no image, GIF, or link to add.")
-        case .notAnImage: String(localized: "That file isn’t an image Stash can read.")
+        case .notAnImage: String(localized: "That file isn’t an image Gifjar can read.")
         case .tooLarge: String(localized: "That file is larger than 50 MB.")
         case .noImageAtURL: String(localized: "Couldn’t find an image or GIF on that page.")
         case .badURL: String(localized: "That doesn’t look like a web address.")

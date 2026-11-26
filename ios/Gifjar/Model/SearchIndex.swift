@@ -14,7 +14,7 @@ nonisolated enum SearchIndex {
         var ocr: String
     }
 
-    static func fields(of item: StashItem) -> Fields {
+    static func fields(of item: GifjarItem) -> Fields {
         Fields(
             phrases: item.phrases,
             title: item.title,

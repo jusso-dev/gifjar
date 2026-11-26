@@ -19,7 +19,7 @@ final class SyncEngine {
     }
 
     /// Lets the app describe items that arrived from another device without analysis.
-    var onMediaDownloaded: ((StashItem) -> Void)?
+    var onMediaDownloaded: ((GifjarItem) -> Void)?
 
     private let context: ModelContext
     private var running: Task<Void, Never>?
@@ -95,7 +95,7 @@ final class SyncEngine {
     }
 
     private func push(_ client: SyncClient) async throws {
-        let dirty = try context.fetch(FetchDescriptor<StashItem>(predicate: #Predicate { $0.needsSync }))
+        let dirty = try context.fetch(FetchDescriptor<GifjarItem>(predicate: #Predicate { $0.needsSync }))
         for item in dirty {
             let id = item.id
             if item.pendingDeletion {
@@ -126,7 +126,7 @@ final class SyncEngine {
         let response = try await client.list(since: cursor)
         for remote in response.items {
             let id = remote.id
-            var descriptor = FetchDescriptor<StashItem>(predicate: #Predicate { $0.id == id })
+            var descriptor = FetchDescriptor<GifjarItem>(predicate: #Predicate { $0.id == id })
             descriptor.fetchLimit = 1
             let local = try context.fetch(descriptor).first
 
@@ -147,7 +147,7 @@ final class SyncEngine {
     }
 
     private func fetchMissingMedia(_ client: SyncClient) async throws {
-        let all = try context.fetch(FetchDescriptor<StashItem>(predicate: #Predicate { !$0.pendingDeletion && $0.mediaUploaded }))
+        let all = try context.fetch(FetchDescriptor<GifjarItem>(predicate: #Predicate { !$0.pendingDeletion && $0.mediaUploaded }))
         for item in all where !MediaStore.shared.exists(id: item.id, type: item.contentType) {
             let data = try await client.downloadMedia(id: item.id)
             try MediaStore.shared.write(data, id: item.id, type: item.contentType)
@@ -155,7 +155,7 @@ final class SyncEngine {
         }
     }
 
-    private func removeLocally(_ item: StashItem) {
+    private func removeLocally(_ item: GifjarItem) {
         MediaStore.shared.delete(id: item.id, type: item.contentType)
         context.delete(item)
     }
@@ -165,7 +165,7 @@ final class SyncEngine {
     static func millis(_ date: Date) -> Int64 { Int64((date.timeIntervalSince1970 * 1000).rounded()) }
     static func date(_ millis: Int64) -> Date { Date(timeIntervalSince1970: Double(millis) / 1000) }
 
-    static func remote(from item: StashItem) -> RemoteItem {
+    static func remote(from item: GifjarItem) -> RemoteItem {
         var r = RemoteItem(id: item.id, updatedAt: millis(item.updatedAt))
         r.createdAt = millis(item.createdAt)
         r.title = item.title
@@ -186,13 +186,13 @@ final class SyncEngine {
         return r
     }
 
-    static func makeItem(from r: RemoteItem) -> StashItem? {
+    static func makeItem(from r: RemoteItem) -> GifjarItem? {
         guard let typeID = r.contentType, let type = UTType(typeID) else { return nil }
         let info = MediaInfo(
             pixelWidth: r.pixelWidth ?? 0, pixelHeight: r.pixelHeight ?? 0,
             frameCount: r.frameCount ?? 1, duration: r.duration ?? 0
         )
-        let item = StashItem(id: r.id, contentType: type, info: info, byteCount: r.byteCount ?? 0,
+        let item = GifjarItem(id: r.id, contentType: type, info: info, byteCount: r.byteCount ?? 0,
                              contentHash: r.contentHash ?? "", sourceURL: r.sourceURL.flatMap(URL.init(string:)))
         item.createdAt = r.createdAt.map(date) ?? .now
         apply(r, toFields: item)
@@ -201,11 +201,11 @@ final class SyncEngine {
         return item
     }
 
-    private func apply(_ r: RemoteItem, to item: StashItem) {
+    private func apply(_ r: RemoteItem, to item: GifjarItem) {
         Self.apply(r, toFields: item)
     }
 
-    private static func apply(_ r: RemoteItem, toFields item: StashItem) {
+    private static func apply(_ r: RemoteItem, toFields item: GifjarItem) {
         item.title = r.title ?? item.title
         item.notes = r.notes ?? item.notes
         item.phrases = r.phrases ?? item.phrases

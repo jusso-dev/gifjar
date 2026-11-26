@@ -5,12 +5,12 @@ import UniformTypeIdentifiers
 
 struct LibraryView: View {
     @Environment(AppModel.self) private var model
-    @Query(filter: #Predicate<StashItem> { !$0.pendingDeletion }, sort: \StashItem.createdAt, order: .reverse)
-    private var items: [StashItem]
+    @Query(filter: #Predicate<GifjarItem> { !$0.pendingDeletion }, sort: \GifjarItem.createdAt, order: .reverse)
+    private var items: [GifjarItem]
     @AppStorage("autoplayInLibrary") private var autoplay = true
     @State private var photoSelection: [PhotosPickerItem] = []
     @State private var showingPhotoPicker = false
-    @State private var pendingDelete: StashItem?
+    @State private var pendingDelete: GifjarItem?
 
     /// In half-open mode the library is the browser under the viewer.
     var isEmbeddedBrowser = false
@@ -30,7 +30,7 @@ struct LibraryView: View {
             }
         }
         .overlay { emptyState(resultsEmpty: results.isEmpty) }
-        .navigationTitle(model.filter == .all ? String(localized: "Stash") : model.filter.title)
+        .navigationTitle(model.filter == .all ? String(localized: "Gifjar") : model.filter.title)
         .toolbarTitleDisplayMode(isEmbeddedBrowser ? .inline : .large)
         .searchable(text: $model.searchText, prompt: "Phrases, notes, objects, text")
         .searchSuggestions { suggestions }
@@ -64,7 +64,7 @@ struct LibraryView: View {
 
     // MARK: Grid cell
 
-    private func cell(for item: StashItem) -> some View {
+    private func cell(for item: GifjarItem) -> some View {
         Button {
             model.selection = item.id
         } label: {
@@ -91,11 +91,11 @@ struct LibraryView: View {
 
     // MARK: Filtering & search
 
-    private var filteredItems: [StashItem] {
+    private var filteredItems: [GifjarItem] {
         let scoped = items.filter { model.filter.includes($0) }
         let query = model.searchText.trimmed
         guard !query.isEmpty else { return sorted(scoped) }
-        var ranked: [(item: StashItem, score: Double)] = []
+        var ranked: [(item: GifjarItem, score: Double)] = []
         for item in scoped {
             if let score = SearchIndex.score(SearchIndex.fields(of: item), query: query) {
                 ranked.append((item, score))
@@ -107,7 +107,7 @@ struct LibraryView: View {
         return ranked.map(\.item)
     }
 
-    private func sorted(_ list: [StashItem]) -> [StashItem] {
+    private func sorted(_ list: [GifjarItem]) -> [GifjarItem] {
         switch model.sort {
         case .newest: list
         case .oldest: list.reversed()
@@ -164,7 +164,7 @@ struct LibraryView: View {
     @ViewBuilder private func emptyState(resultsEmpty: Bool) -> some View {
         if items.isEmpty {
             ContentUnavailableView {
-                Label("Your Stash Is Empty", systemImage: "square.and.arrow.down.on.square")
+                Label("Gifjar Is Empty", systemImage: "square.and.arrow.down.on.square")
             } description: {
                 Text("Copy a GIF or image anywhere, then paste it here. Apple Intelligence describes it so you can search for it later.")
             } actions: {
@@ -187,7 +187,7 @@ struct LibraryView: View {
 // MARK: - Grid cell
 
 private struct GridCell: View {
-    let item: StashItem
+    let item: GifjarItem
     let autoplay: Bool
     let isSelected: Bool
 

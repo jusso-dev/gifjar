@@ -181,7 +181,7 @@ nonisolated extension URL {
 
 /// Stores the Worker token in the Keychain, never in UserDefaults.
 nonisolated enum TokenStore {
-    private static let service = "dev.jusso.stash.sync"
+    private static let service = "dev.jusso.gifjar.sync"
     private static let account = "api-token"
 
     static func read() -> String? {

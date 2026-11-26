@@ -1,4 +1,4 @@
-# Stash
+# Gifjar
 
 A native iOS library for images and GIFs. Paste or link something in, Apple Intelligence describes it on device, and you search it later by what it shows, the text inside it, or your own phrases and notes. Originals sync to Cloudflare R2 through a Worker.
 
@@ -17,7 +17,7 @@ cf dev                              # http://localhost:8787
 
 # production
 cf auth login
-cf r2 buckets create-by-name        # bucket name: stash-media
+cf r2 buckets create-by-name        # bucket name: gifjar-media
 cf deploy
 # then set the API_TOKEN secret (use `cf cli search "set worker secret"`); use a long random value
 ```
@@ -37,10 +37,10 @@ API (all routes need `Authorization: Bearer <API_TOKEN>`):
 ```sh
 cd ios
 xcodegen generate
-open Stash.xcodeproj    # set your Team on both the Stash and StashShare targets
+open Gifjar.xcodeproj    # set your Team on both the Gifjar and GifjarShare targets
 ```
 
-Both targets share the App Group `group.dev.jusso.stash`. With automatic signing, Xcode registers it the first time you build for a device.
+Both targets share the App Group `group.dev.jusso.gifjar`. With automatic signing, Xcode registers it the first time you build for a device.
 
 In the app: **Options ▸ Settings ▸ Cloud Storage**, enter the Worker URL and token, then **Test Connection**. The token is stored in the Keychain.
 
@@ -48,9 +48,9 @@ Adding items: the Paste button, ⌘V, drag and drop, **+ ▸ Add from Link** (di
 
 ### Share sheet
 
-Choose **Stash** in the share sheet from Photos, Safari, Messages, GIPHY, Tenor, or Files. It accepts images and GIFs (up to 20 at once), links to images, links to pages that contain one, and text that contains a link. The sheet plays the GIF, fills in the page title, and lets you add a phrase before saving.
+Choose **Gifjar** in the share sheet from Photos, Safari, Messages, GIPHY, Tenor, or Files. It accepts images and GIFs (up to 20 at once), links to images, links to pages that contain one, and text that contains a link. The sheet plays the GIF, fills in the page title, and lets you add a phrase before saving.
 
-The extension writes each item to an inbox folder in the App Group. Stash files them into the library the next time it opens, then describes them with Apple Intelligence. If a link can't be fetched (for example, you're offline), the extension saves the link and the app tries again later. Sharing something you already have adds the new phrase to the existing item.
+The extension writes each item to an inbox folder in the App Group. Gifjar files them into the library the next time it opens, then describes them with Apple Intelligence. If a link can't be fetched (for example, you're offline), the extension saves the link and the app tries again later. Sharing something you already have adds the new phrase to the existing item.
 
 ### iPhone Duo
 

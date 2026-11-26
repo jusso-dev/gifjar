@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
 
-/// Share sheet entry point: "Save to Stash" from Photos, Safari, Messages, GIPHY, Tenor, etc.
+/// Share sheet entry point: "Save to Gifjar" from Photos, Safari, Messages, GIPHY, Tenor, etc.
 final class ShareViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,7 +118,7 @@ final class ShareModel {
 
     func save() {
         guard let inbox = ShareInbox.shared else {
-            saveError = String(localized: "Open Stash once, then try again.")
+            saveError = String(localized: "Open Gifjar once, then try again.")
             return
         }
         isSaving = true
@@ -176,12 +176,12 @@ struct ShareView: View {
                         if let error = model.saveError {
                             Label(error, systemImage: "exclamationmark.circle").foregroundStyle(.red)
                         } else {
-                            Text("Apple Intelligence describes it when you next open Stash, so you can search for it later.")
+                            Text("Apple Intelligence describes it when you next open Gifjar, so you can search for it later.")
                         }
                     }
                 }
             }
-            .navigationTitle("Save to Stash")
+            .navigationTitle("Save to Gifjar")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -231,7 +231,7 @@ struct ShareView: View {
             ContentUnavailableView {
                 Label(url.host() ?? "Link", systemImage: "link")
             } description: {
-                Text("Couldn’t load this page right now. Stash will fetch the image when you next open it.")
+                Text("Couldn’t load this page right now. Gifjar will fetch the image when you next open it.")
             }
         case .failed(let message):
             ContentUnavailableView("Can’t Save This", systemImage: "photo.badge.exclamationmark", description: Text(message))

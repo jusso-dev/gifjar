@@ -4,7 +4,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
-    @Query private var items: [StashItem]
+    @Query private var items: [GifjarItem]
     @AppStorage("autoplayInLibrary") private var autoplay = true
 
     @State private var token = ""
@@ -17,7 +17,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Worker URL", text: $sync.serverURLString, prompt: Text("https://stash-api.example.workers.dev"))
+                    TextField("Worker URL", text: $sync.serverURLString, prompt: Text("https://gifjar-api.example.workers.dev"))
                         .keyboardType(.URL)
                         .textContentType(.URL)
                         .textInputAutocapitalization(.never)

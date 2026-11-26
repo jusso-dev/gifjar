@@ -3,11 +3,11 @@ import SwiftUI
 
 struct DetailView: View {
     @Environment(AppModel.self) private var model
-    @Query private var matches: [StashItem]
+    @Query private var matches: [GifjarItem]
     var showsMedia = true
 
     init(id: UUID, showsMedia: Bool = true) {
-        _matches = Query(filter: #Predicate<StashItem> { $0.id == id && !$0.pendingDeletion })
+        _matches = Query(filter: #Predicate<GifjarItem> { $0.id == id && !$0.pendingDeletion })
         self.showsMedia = showsMedia
     }
 
@@ -15,7 +15,7 @@ struct DetailView: View {
         if let item = matches.first {
             DetailForm(item: item, showsMedia: showsMedia)
         } else {
-            ContentUnavailableView("Item Deleted", systemImage: "trash", description: Text("This item is no longer in your Stash."))
+            ContentUnavailableView("Item Deleted", systemImage: "trash", description: Text("This item is no longer in Gifjar."))
         }
     }
 }
@@ -23,7 +23,7 @@ struct DetailView: View {
 private struct DetailForm: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
-    @Bindable var item: StashItem
+    @Bindable var item: GifjarItem
     let showsMedia: Bool
 
     @State private var newPhrase = ""
@@ -205,7 +205,7 @@ private struct DetailForm: View {
 
 /// Shows the item large and playing, with a tap-to-pause control.
 struct MediaPlayerView: View {
-    let item: StashItem
+    let item: GifjarItem
     var fill: Bool
     @State private var isPaused = false
     @Environment(\.accessibilityPlayAnimatedImages) private var systemAllowsAnimation

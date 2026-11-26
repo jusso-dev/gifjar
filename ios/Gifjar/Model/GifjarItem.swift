@@ -7,7 +7,7 @@ import UniformTypeIdentifiers
 /// The original bytes live on disk in `MediaStore` (and in R2 once synced);
 /// this model holds everything searchable about it.
 @Model
-final class StashItem {
+final class GifjarItem {
     @Attribute(.unique) var id: UUID
     var createdAt: Date
     /// Bumped on every user or AI edit; drives last-writer-wins sync.
@@ -81,7 +81,7 @@ final class StashItem {
     }
 }
 
-extension StashItem {
+extension GifjarItem {
     var contentType: UTType { UTType(contentTypeIdentifier) ?? .image }
     var isAnimated: Bool { frameCount > 1 }
     var isGIF: Bool { contentType.conforms(to: .gif) }

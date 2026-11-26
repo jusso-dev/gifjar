@@ -1,5 +1,5 @@
 {
-	"name": "stash-api",
+	"name": "gifjar-api",
 	"private": true,
 	"type": "module",
 	"scripts": {

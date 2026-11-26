@@ -67,9 +67,9 @@ final class AppModel {
         }
     }
 
-    func item(_ id: UUID?) -> StashItem? {
+    func item(_ id: UUID?) -> GifjarItem? {
         guard let id else { return nil }
-        var descriptor = FetchDescriptor<StashItem>(predicate: #Predicate { $0.id == id && !$0.pendingDeletion })
+        var descriptor = FetchDescriptor<GifjarItem>(predicate: #Predicate { $0.id == id && !$0.pendingDeletion })
         descriptor.fetchLimit = 1
         return try? context.fetch(descriptor).first
     }
@@ -132,18 +132,18 @@ final class AppModel {
                 : String(localized: "\(outcome.added.count) items added")
             show(Toast(message: message, systemImage: "checkmark.circle.fill", itemID: first.id))
         } else if let duplicate = outcome.duplicates.first {
-            show(Toast(message: String(localized: "Already in your Stash"), systemImage: "square.on.square", itemID: duplicate.id))
+            show(Toast(message: String(localized: "Already in Gifjar"), systemImage: "square.on.square", itemID: duplicate.id))
         }
     }
 
     // MARK: Item actions
 
-    func edited(_ item: StashItem) {
+    func edited(_ item: GifjarItem) {
         item.touch()
         scheduleSync()
     }
 
-    func copy(_ item: StashItem) {
+    func copy(_ item: GifjarItem) {
         do {
             let data = try MediaStore.shared.read(id: item.id, type: item.contentType)
             // Supplying the original type keeps GIFs animated when pasted into Messages.
@@ -156,16 +156,16 @@ final class AppModel {
         }
     }
 
-    func toggleFavorite(_ item: StashItem) {
+    func toggleFavorite(_ item: GifjarItem) {
         item.isFavorite.toggle()
         edited(item)
     }
 
-    func reanalyze(_ item: StashItem) {
+    func reanalyze(_ item: GifjarItem) {
         analysis.enqueue(item)
     }
 
-    func delete(_ item: StashItem) {
+    func delete(_ item: GifjarItem) {
         if selection == item.id { selection = nil }
         if sync.configuration != nil {
             item.pendingDeletion = true
@@ -229,7 +229,7 @@ enum LibraryFilter: String, CaseIterable, Identifiable {
         }
     }
 
-    func includes(_ item: StashItem) -> Bool {
+    func includes(_ item: GifjarItem) -> Bool {
         switch self {
         case .all: true
         case .animated: item.isAnimated

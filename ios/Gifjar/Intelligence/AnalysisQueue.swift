@@ -15,7 +15,7 @@ final class AnalysisQueue {
         self.context = context
     }
 
-    func enqueue(_ item: StashItem) {
+    func enqueue(_ item: GifjarItem) {
         guard !pending.contains(item.id), activeID != item.id else { return }
         item.analysisState = .pending
         pending.append(item.id)
@@ -24,7 +24,7 @@ final class AnalysisQueue {
 
     /// Picks up anything left unfinished by a previous launch.
     func resumeUnfinished() {
-        let descriptor = FetchDescriptor<StashItem>(predicate: #Predicate {
+        let descriptor = FetchDescriptor<GifjarItem>(predicate: #Predicate {
             !$0.pendingDeletion
         })
         let items = (try? context.fetch(descriptor)) ?? []
@@ -66,7 +66,7 @@ final class AnalysisQueue {
         onItemAnalyzed?()
     }
 
-    private func apply(_ result: AnalysisResult, to item: StashItem) {
+    private func apply(_ result: AnalysisResult, to item: GifjarItem) {
         item.aiSummary = result.summary
         item.aiTags = result.tags
         item.ocrText = result.ocrText
@@ -79,8 +79,8 @@ final class AnalysisQueue {
         item.touch()
     }
 
-    private func fetch(_ id: UUID) -> StashItem? {
-        var descriptor = FetchDescriptor<StashItem>(predicate: #Predicate { $0.id == id })
+    private func fetch(_ id: UUID) -> GifjarItem? {
+        var descriptor = FetchDescriptor<GifjarItem>(predicate: #Predicate { $0.id == id })
         descriptor.fetchLimit = 1
         return try? context.fetch(descriptor).first
     }

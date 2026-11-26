@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 
 /**
- * Stash API — storage backend for the Stash iOS app.
+ * Gifjar API — storage backend for the Gifjar iOS app.
  *
  * R2 layout:
  *   media/<id>        original bytes (GIF, PNG, JPEG, HEIC, WebP…)
@@ -59,7 +59,7 @@ async function authorized(request: Request): Promise<boolean> {
 }
 
 async function readMeta(id: string): Promise<ItemMeta | null> {
-	const obj = await env.STASH.get(`meta/${id}.json`);
+	const obj = await env.GIFJAR.get(`meta/${id}.json`);
 	return obj ? ((await obj.json()) as ItemMeta) : null;
 }
 
@@ -67,7 +67,7 @@ async function listItems(since: number): Promise<ItemMeta[]> {
 	const keys: string[] = [];
 	let cursor: string | undefined;
 	do {
-		const page = await env.STASH.list({ prefix: "meta/", cursor, include: ["customMetadata"] });
+		const page = await env.GIFJAR.list({ prefix: "meta/", cursor, include: ["customMetadata"] });
 		for (const obj of page.objects) {
 			const updatedAt = Number(obj.customMetadata?.updatedAt ?? 0);
 			if (updatedAt > since) keys.push(obj.key);
@@ -80,7 +80,7 @@ async function listItems(since: number): Promise<ItemMeta[]> {
 	for (let i = 0; i < keys.length; i += 50) {
 		const batch = await Promise.all(
 			keys.slice(i, i + 50).map(async (key) => {
-				const obj = await env.STASH.get(key);
+				const obj = await env.GIFJAR.get(key);
 				return obj ? ((await obj.json()) as ItemMeta) : null;
 			}),
 		);
@@ -112,7 +112,7 @@ async function putMeta(id: string, request: Request): Promise<Response> {
 		return json(existing, 409);
 	}
 
-	await env.STASH.put(`meta/${id}.json`, JSON.stringify(incoming), {
+	await env.GIFJAR.put(`meta/${id}.json`, JSON.stringify(incoming), {
 		httpMetadata: { contentType: "application/json" },
 		customMetadata: { updatedAt: String(incoming.updatedAt) },
 	});
@@ -121,8 +121,8 @@ async function putMeta(id: string, request: Request): Promise<Response> {
 
 async function deleteItem(id: string): Promise<Response> {
 	const tombstone: ItemMeta = { id, updatedAt: Date.now(), deleted: true };
-	await env.STASH.delete(`media/${id}`);
-	await env.STASH.put(`meta/${id}.json`, JSON.stringify(tombstone), {
+	await env.GIFJAR.delete(`media/${id}`);
+	await env.GIFJAR.put(`meta/${id}.json`, JSON.stringify(tombstone), {
 		httpMetadata: { contentType: "application/json" },
 		customMetadata: { updatedAt: String(tombstone.updatedAt) },
 	});
@@ -140,14 +140,14 @@ async function putMedia(id: string, request: Request): Promise<Response> {
 	const existingMeta = await readMeta(id);
 	if (existingMeta?.deleted) return error(410, "Item was deleted");
 
-	const obj = await env.STASH.put(`media/${id}`, request.body, {
+	const obj = await env.GIFJAR.put(`media/${id}`, request.body, {
 		httpMetadata: { contentType: type, cacheControl: "private, max-age=31536000, immutable" },
 	});
 	return json({ id, size: obj?.size ?? 0, etag: obj?.httpEtag });
 }
 
 async function getMedia(id: string, request: Request): Promise<Response> {
-	const obj = await env.STASH.get(`media/${id}`, { onlyIf: request.headers });
+	const obj = await env.GIFJAR.get(`media/${id}`, { onlyIf: request.headers });
 	if (!obj) return error(404, "Not found");
 
 	const headers = new Headers();

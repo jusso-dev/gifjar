@@ -28,7 +28,7 @@ struct AddLinkView: View {
                         Label(error, systemImage: "exclamationmark.circle")
                             .foregroundStyle(.red)
                     } else {
-                        Text("Stash downloads the image or GIF and finds it on web pages like GIPHY and Tenor.")
+                        Text("Gifjar downloads the image or GIF and finds it on web pages like GIPHY and Tenor.")
                     }
                 }
             }
