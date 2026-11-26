@@ -11,6 +11,8 @@ struct LibraryView: View {
     @State private var photoSelection: [PhotosPickerItem] = []
     @State private var showingPhotoPicker = false
     @State private var pendingDelete: GifjarItem?
+    /// Item showing the double-tap heart burst.
+    @State private var heartBurst: UUID?
 
     /// In half-open mode the library is the browser under the viewer.
     var isEmbeddedBrowser = false
@@ -27,6 +29,9 @@ struct LibraryView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollView {
+                    if showsFavoritesShelf {
+                        FavoritesShelf(items: favorites) { model.filter = .favorites }
+                    }
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: isEmbeddedBrowser ? 96 : 110), spacing: 2)], spacing: 2) {
                         ForEach(results) { item in
                             cell(for: item)
@@ -56,6 +61,7 @@ struct LibraryView: View {
                 model.importData(blobs)
             }
         }
+        .sensoryFeedback(.impact(weight: .light), trigger: heartBurst) { _, new in new != nil }
         .confirmationDialog(
             "Delete this item?",
             isPresented: Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } }),
@@ -71,12 +77,13 @@ struct LibraryView: View {
     // MARK: Grid cell
 
     private func cell(for item: GifjarItem) -> some View {
-        Button {
-            model.selection = item.id
-        } label: {
-            GridCell(item: item, autoplay: autoplay, isSelected: model.selection == item.id)
-        }
-        .buttonStyle(.plain)
+        GridCell(item: item, autoplay: autoplay, isSelected: model.selection == item.id,
+                 showsHeartBurst: heartBurst == item.id)
+            // Double-tap to favourite, like Photos; a single tap still opens it.
+            .onTapGesture(count: 2) { favoriteWithBurst(item) }
+            .onTapGesture { model.selection = item.id }
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction { model.selection = item.id }
         .contextMenu {
             Button("Copy", systemImage: "doc.on.doc") { model.copy(item) }
             ShareLink(item: item.fileURL) { Label("Share", systemImage: "square.and.arrow.up") }
@@ -93,6 +100,29 @@ struct LibraryView: View {
         .accessibilityHint(Text("Opens details"))
         .accessibilityAction(named: "Copy") { model.copy(item) }
         .accessibilityAction(named: item.isFavorite ? "Unfavorite" : "Favorite") { model.toggleFavorite(item) }
+    }
+
+    private func favoriteWithBurst(_ item: GifjarItem) {
+        model.toggleFavorite(item)
+        guard item.isFavorite else { return }
+        withAnimation(.spring(duration: 0.3, bounce: 0.5)) { heartBurst = item.id }
+        Task {
+            try? await Task.sleep(for: .milliseconds(650))
+            withAnimation(.easeOut(duration: 0.25)) { if heartBurst == item.id { heartBurst = nil } }
+        }
+    }
+
+    // MARK: Favorites shelf
+
+    /// Most-reused first, so the ones you send all the time sit at the front.
+    private var favorites: [GifjarItem] {
+        items.filter(\.isFavorite).sorted {
+            ($0.lastUsedAt ?? $0.createdAt) > ($1.lastUsedAt ?? $1.createdAt)
+        }
+    }
+
+    private var showsFavoritesShelf: Bool {
+        model.filter == .all && model.searchText.trimmed.isEmpty && items.contains(where: \.isFavorite)
     }
 
     // MARK: Filtering & search
@@ -196,6 +226,7 @@ private struct GridCell: View {
     let item: GifjarItem
     let autoplay: Bool
     let isSelected: Bool
+    var showsHeartBurst = false
 
     var body: some View {
         Color(.secondarySystemFill)
@@ -216,6 +247,16 @@ private struct GridCell: View {
             .overlay {
                 if isSelected {
                     Rectangle().strokeBorder(.tint, lineWidth: 3)
+                }
+            }
+            .overlay {
+                if showsHeartBurst {
+                    Image(systemName: "heart.fill")
+                        .font(.system(size: 44, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black.opacity(0.35), radius: 6)
+                        .transition(.scale(scale: 0.4).combined(with: .opacity))
+                        .accessibilityHidden(true)
                 }
             }
             .contentShape(.rect)
@@ -247,5 +288,67 @@ private struct GridCell: View {
             }
         }
         .padding(5)
+    }
+}
+
+// MARK: - Favorites shelf
+
+/// A row of favourites above the grid. One tap copies, ready to paste again.
+private struct FavoritesShelf: View {
+    @Environment(AppModel.self) private var model
+    let items: [GifjarItem]
+    let seeAll: () -> Void
+
+    @ScaledMetric(relativeTo: .body) private var tile: CGFloat = 76
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline) {
+                Label("Favorites", systemImage: "heart.fill")
+                    .font(.headline)
+                    .labelStyle(.titleAndIcon)
+                    .symbolRenderingMode(.multicolor)
+                Spacer()
+                Button("See All", action: seeAll)
+                    .font(.subheadline)
+            }
+            .padding(.horizontal)
+
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 8) {
+                    ForEach(items) { item in
+                        Button {
+                            model.copy(item)
+                        } label: {
+                            Color(.secondarySystemFill)
+                                .frame(width: tile, height: tile)
+                                .overlay {
+                                    if MediaStore.shared.exists(id: item.id, type: item.contentType) {
+                                        AnimatedImage(url: item.fileURL, maxPixelSize: tile)
+                                    }
+                                }
+                                .clipShape(.rect(cornerRadius: 12))
+                        }
+                        .buttonStyle(.plain)
+                        .contextMenu {
+                            Button("Copy", systemImage: "doc.on.doc") { model.copy(item) }
+                            Button("Show Details", systemImage: "info.circle") { model.selection = item.id }
+                            ShareLink(item: item.fileURL) { Label("Share", systemImage: "square.and.arrow.up") }
+                            Divider()
+                            Button("Unfavorite", systemImage: "heart.slash") { model.toggleFavorite(item) }
+                        } preview: {
+                            MediaPlayerView(item: item, fill: false)
+                                .frame(width: 320, height: 320 / item.aspectRatio)
+                        }
+                        .accessibilityLabel(Text("\(item.displayTitle), \(item.kindLabel)"))
+                        .accessibilityHint(Text("Copies it so you can paste it anywhere"))
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .scrollIndicators(.hidden)
+            .frame(height: tile)
+        }
+        .padding(.vertical, 12)
     }
 }

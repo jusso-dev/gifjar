@@ -159,6 +159,10 @@ final class AppModel {
     func toggleFavorite(_ item: GifjarItem) {
         item.isFavorite.toggle()
         edited(item)
+        show(Toast(
+            message: item.isFavorite ? String(localized: "Added to Favorites") : String(localized: "Removed from Favorites"),
+            systemImage: item.isFavorite ? "heart.fill" : "heart.slash"
+        ))
     }
 
     func reanalyze(_ item: GifjarItem) {

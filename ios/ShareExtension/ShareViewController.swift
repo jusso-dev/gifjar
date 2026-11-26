@@ -37,6 +37,7 @@ final class ShareModel {
     var phase: Phase = .loading
     var title = ""
     var phrase = ""
+    var isFavorite = false
     var isSaving = false
     var saveError: String?
 
@@ -122,7 +123,7 @@ final class ShareModel {
             return
         }
         isSaving = true
-        var request = ShareRequest(title: title.trimmed, phrase: phrase.trimmed)
+        var request = ShareRequest(title: title.trimmed, phrase: phrase.trimmed, isFavorite: isFavorite)
         do {
             switch phase {
             case .ready:
@@ -172,6 +173,7 @@ struct ShareView: View {
                             .focused($phraseFocused)
                             .submitLabel(.done)
                             .onSubmit(model.save)
+                        Toggle("Add to Favorites", systemImage: "heart", isOn: $model.isFavorite)
                     } footer: {
                         if let error = model.saveError {
                             Label(error, systemImage: "exclamationmark.circle").foregroundStyle(.red)

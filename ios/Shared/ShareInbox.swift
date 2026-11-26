@@ -13,6 +13,7 @@ nonisolated struct ShareRequest: Codable, Sendable, Equatable {
     var title: String?
     var phrase: String?
     var note: String?
+    var isFavorite: Bool?
 }
 
 /// A folder in the App Group container that the share extension writes to and the app drains.

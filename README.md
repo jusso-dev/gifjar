@@ -46,6 +46,10 @@ In the app: **Options ▸ Settings ▸ Cloud Storage**, enter the Worker URL and
 
 Adding items: the Paste button, ⌘V, drag and drop, **+ ▸ Add from Link** (direct image URLs, or pages such as GIPHY and Tenor), **+ ▸ Choose from Photos**, or the share sheet.
 
+### Favorites
+
+Double-tap any item in the grid to favourite it (or use the heart in its detail view, its context menu, or **Add to Favorites** in the share sheet). Favourites appear in a row above the library, most recently used first; one tap copies a favourite so you can paste it straight into Messages again. **See All** opens the Favorites filter.
+
 ### Share sheet
 
 Choose **Gifjar** in the share sheet from Photos, Safari, Messages, GIPHY, Tenor, or Files. It accepts images and GIFs (up to 20 at once), links to images, links to pages that contain one, and text that contains a link. The sheet plays the GIF, fills in the page title, and lets you add a phrase before saving.

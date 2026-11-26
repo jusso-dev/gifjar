@@ -82,7 +82,8 @@ final class Importer {
                     inbox.remove(folder)
                     continue
                 }
-                outcome.merge(try save(media, title: request.title, phrase: request.phrase, note: request.note))
+                outcome.merge(try save(media, title: request.title, phrase: request.phrase, note: request.note,
+                                       favorite: request.isFavorite == true))
                 inbox.remove(folder)
             } catch let error as ImportError where error.isPermanent {
                 inbox.remove(folder)
@@ -102,16 +103,25 @@ final class Importer {
     }
 
     @discardableResult
-    private func save(_ media: ResolvedMedia, title: String? = nil, phrase: String? = nil, note: String? = nil) throws -> Outcome {
+    private func save(_ media: ResolvedMedia, title: String? = nil, phrase: String? = nil, note: String? = nil,
+                      favorite: Bool = false) throws -> Outcome {
         let phrase = phrase?.trimmed ?? ""
         let hash = MediaStore.hash(media.data)
         var existing = FetchDescriptor<GifjarItem>(predicate: #Predicate { $0.contentHash == hash && !$0.pendingDeletion })
         existing.fetchLimit = 1
         if let duplicate = try context.fetch(existing).first {
             // Sharing something you already have can still add a phrase to it.
+            var changed = false
             if !phrase.isEmpty,
                !duplicate.phrases.contains(where: { $0.caseInsensitiveCompare(phrase) == .orderedSame }) {
                 duplicate.phrases.append(phrase)
+                changed = true
+            }
+            if favorite, !duplicate.isFavorite {
+                duplicate.isFavorite = true
+                changed = true
+            }
+            if changed {
                 duplicate.touch()
                 try context.save()
             }
@@ -124,6 +134,7 @@ final class Importer {
         item.title = typedTitle.isEmpty ? (media.suggestedTitle ?? "") : typedTitle
         if !phrase.isEmpty { item.phrases = [phrase] }
         if let note = note?.trimmed, !note.isEmpty { item.notes = note }
+        item.isFavorite = favorite
         try MediaStore.shared.write(media.data, id: item.id, type: media.type)
         context.insert(item)
         try context.save()
